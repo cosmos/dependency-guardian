@@ -8,13 +8,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-    - name: Install Dependency Guardian
-      run: go install .
-      working-directory: ${{ github.action_path }}
+    - name: Download Dependency Guardian
+      run: |
+        VERSION=$(echo ${{ github.action_ref }} | sed 's/refs\/tags\///')
+        curl -L -o dependency-guardian.tar.gz "https://github.com/cosmos/dependency-guardian/releases/download/${VERSION}/dependency-guardian-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/').tar.gz"
+        tar -xzf dependency-guardian.tar.gz
+        sudo mv dependency-guardian /usr/local/bin/
+        rm dependency-guardian.tar.gz
       shell: bash
     - name: Get PR number
       id: get_pr_number

@@ -125,7 +125,7 @@ func runAnalyze(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to create temp dir: %w", err)
 	}
 
-	repoURL := fmt.Sprintf("https://github.com/%s/%s.git", owner, repoName)
+	repoURL := fmt.Sprintf("https://x-access-token:%s@github.com/%s/%s.git", token, owner, repoName)
 
 	// Clone with depth 1 to target branch/ref
 	cloneCmd := exec.Command("git", "clone", "--depth", "1", "--branch", branchRef, repoURL, cloneDir)
