@@ -1,0 +1,26 @@
+name: 'Dependency Guardian Action'
+description: 'Analyzes pull request dependencies and posts an impact report.'
+author: 'Cosmos'
+inputs:
+  github-token:
+    description: 'The GITHUB_TOKEN secret. Required for API access.'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+    - name: Install Dependency Guardian
+      run: go install github.com/cosmos/dependency-guardian@${{ github.action_ref }}
+      shell: bash
+    - name: Get PR number
+      id: get_pr_number
+      run: echo "PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+      shell: bash
+    - name: Run Dependency Guardian
+      run: dependency-guardian analyze
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }} 
