@@ -1,3 +1,4 @@
+version: 2
 before:
   hooks:
     - go mod tidy
@@ -13,22 +14,16 @@ builds:
       - arm64
     main: .
     binary: dependency-guardian
-archives:
-  - format: tar.gz
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 checksum:
   name_template: 'checksums.txt'
-snapshot:
-  name_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
-  filters:
-    groups:
-      - title: Features
-        regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
-        order: 0
-      - title: 'Bug fixes'
-        regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
-        order: 1
-      - title: Others
-        order: 999
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Others
+      order: 999
